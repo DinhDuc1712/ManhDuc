@@ -1,3 +1,2 @@
 # Đinh Mạnh Đức
-An toàn thông tin
-Link dự án Mạng máy tính nằm ở phần Mạng UEH
+#Link dự án Mạng máy tính nằm ở phần Mạng UEH, chọn view raw để tải về
