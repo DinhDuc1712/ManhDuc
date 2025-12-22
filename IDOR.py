@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-"""
-DVWA Authorization Bypass IDOR Exploiter
-Cấp độ: Low và Medium
-Dựa trên tài liệu Lab5.14
-Author: Security Researcher
-"""
-
 import requests
 import re
 import sys
