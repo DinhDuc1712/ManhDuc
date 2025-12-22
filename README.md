@@ -9,6 +9,3 @@ python3 IDOR.py -u http://localhost:42001 -l medium
 
 # Testing level HIGH
 python3 IDOR.py -u http://localhost:42001 -l high
-
-# Testing level IMPOSSIBLE
-python3 IDOR.py -u http://localhost:42001 -l impossible
