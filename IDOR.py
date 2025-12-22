@@ -437,7 +437,7 @@ class DVVAAuthBypassExploiter:
         self.print_banner()
         
         print(f"\n{Fore.WHITE}Target URL: {self.base_url}")
-        print(f"{Fore.WHITE}Testing based on Document"T
+        print(f"{Fore.WHITE}Testing based on Document")
         
         results = {
             'low_level': False,
