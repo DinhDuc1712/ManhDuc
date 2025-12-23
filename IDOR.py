@@ -34,7 +34,7 @@ class DVVAAuthBypassExploiter:
         """Print banner"""
         print(f"{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}DVWA IDOR EXPLOITER")
-        print(f"{Fore.GRENN}Author: Đinh Mạnh Đức")
+        print(f"{Fore.GREEN}Author: Đinh Mạnh Đức")
         print(f"{Fore.GREEN}Version: 1.0")
         print(f"{Fore.GREEN}Description: This tool is exploit vulnerability {Fore.RED}Insecure Direct Object Reference {Fore.GREEN}in DVWA")
         print(f"{Fore.CYAN}Cấp độ LOW và MEDIUM")
