@@ -6,6 +6,3 @@ python3 IDOR.py -u http://localhost:42001 -l low
 
 # Testing level MEDIUM
 python3 IDOR.py -u http://localhost:42001 -l medium
-
-# Testing level HIGH
-python3 IDOR.py -u http://localhost:42001 -l high
