@@ -34,7 +34,9 @@ class DVVAAuthBypassExploiter:
         """Print banner"""
         print(f"{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}DVWA IDOR EXPLOITER")
-        print(f"{fore.RED}Author: Đinh Mạnh Đức")
+        print(f"{Fore.GRENN}Author: Đinh Mạnh Đức")
+        print(f"{Fore.GREEN}Version: 1.0")
+        print(f"{Fore.GREEN}Description: This tool is exploit vulnerability {Fore.RED}Insecure Direct Object Reference {Fore.GREEN}in DVWA")
         print(f"{Fore.CYAN}Cấp độ LOW và MEDIUM")
         print(f"{Fore.CYAN}{'='*80}")
     
@@ -135,7 +137,7 @@ class DVVAAuthBypassExploiter:
         print(f"Status: HTTP {response.status_code}")
         
         if response.status_code == 200:
-            print(f"{Fore.GREEN}[+] CÓ THỂ TRUY CẬP!")
+            print(f"{Fore.GREEN}[+] CÓ THỂ TRUY CẬP")
             print(f"{Fore.YELLOW}[!] Lỗ hổng IDOR phát hiện: User {username} có thể truy cập trang admin")
             
             # Parse và hiển thị dữ liệu
@@ -436,7 +438,6 @@ class DVVAAuthBypassExploiter:
         self.print_banner()
         
         print(f"\n{Fore.WHITE}Target URL: {self.base_url}")
-        print(f"{Fore.WHITE}Testing based on Document")
         
         results = {
             'low_level': False,
@@ -469,7 +470,7 @@ class DVVAAuthBypassExploiter:
             results['medium_level'] = True
             
         except KeyboardInterrupt:
-            print(f"\n{Fore.RED}[!] Test bị gián đoạn")
+            print(f"\n{Fore.RED}[!] Test Interrupt")
         except Exception as e:
             print(f"\n{Fore.RED}[!] Error: {e}")
         
@@ -582,37 +583,37 @@ class DVVAAuthBypassExploiter:
             
             f.write("1. RỦI RO TÀI CHÍNH:\n")
             if results.get('medium_level'):
-                f.write("   - Cao: Có thể dẫn đến regulatory fines\n")
+                f.write("   - Cao: Có thể dẫn đến vi phạm quy định và tiền phạt\n")
                 f.write("   - Chi phí khắc phục: Trung bình đến cao\n")
-                f.write("   - Potential fines: $1,000 - $50,000 (GDPR/PDPA violations)\n")
+                f.write("   - Mức phạt tiềm năng: $1,000 - $50,000 (vi phạm GDPR/PDPA)\n")
             else:
                 f.write("   - Trung bình: Chủ yếu là chi phí khắc phục\n")
             
             f.write("\n2. RỦI RO DANH TIẾNG:\n")
             if results.get('medium_level'):
                 f.write("   - Cao: Mất lòng tin của khách hàng\n")
-                f.write("   - PR crisis: Cần có communication plan\n")
-            
+                f.write("   - Khủng hoảng PR: Cần có kế hoạch truyền thông\n")
+                
             f.write("\n3. RỦI RO PHÁP LÝ:\n")
-            f.write("   - GDPR Violation: Up to €20 million or 4% of global turnover\n")
-            f.write("   - PDPA Violation: Up to 5% of annual turnover in Vietnam\n")
-            f.write("   - CCPA Violation: $2,500-$7,500 per violation\n")
-            f.write("   - Data Protection Laws: Multiple jurisdictions affected\n")
+            f.write("   - Vi phạm GDPR: Lên đến 20 triệu € hoặc 4% doanh thu toàn cầu\n")
+            f.write("   - Vi phạm PDPA: Lên đến 5% doanh thu hàng năm tại Việt Nam\n")
+            f.write("   - Vi phạm CCPA: $2,500-$7,500 cho mỗi vi phạm\n")
+            f.write("   - Luật bảo vệ dữ liệu: Nhiều khu vực pháp lý bị ảnh hưởng\n")
 
             f.write("KHUYẾN NGHỊ ƯU TIÊN:\n")
             f.write("-"*50 + "\n")
             
             if results.get('medium_level'):
-                f.write("1. ƯU TIÊN TRUNG BÌNH-CAO (MEDIUM-HIGH PRIORITY - SEV-3):\n")
-                f.write("   - Trong 24 giờ: Secure all API endpoints\n")
-                f.write("   - Trong 48 giờ: Implement proper access control\n")
-                f.write("   - Trong 1 tuần: Data access audit và logging\n\n")
+                f.write("1. ƯU TIÊN TRUNG BÌNH-CAO (MỨC ĐỘ ƯU TIÊN 3):\n")
+                f.write("   - Trong 24 giờ: Bảo mật tất cả các điểm cuối API\n")
+                f.write("   - Trong 48 giờ: Triển khai kiểm soát truy cập phù hợp\n")
+                f.write("   - Trong 1 tuần: Kiểm tra truy cập dữ liệu và ghi nhật ký\n\n")
             
             if results.get('low_level'):
-                f.write("2. ƯU TIÊN TRUNG BÌNH (MEDIUM PRIORITY - SEV-4):\n")
-                f.write("   - Trong 48 giờ: Implement server-side authorization\n")
-                f.write("   - Trong 1 tuần: Code review cho client-side checks\n")
-                f.write("   - Trong 2 tuần: Security training for developers\n\n")
+                f.write("2. ƯU TIÊN TRUNG BÌNH (MỨC ĐỘ ƯU TIÊN 4):\n")
+                f.write("   - Trong 48 giờ: Triển khai xác thực phía máy chủ\n")
+                f.write("   - Trong 1 tuần: Xem xét mã nguồn cho kiểm tra phía máy khách\n")
+                f.write("   - Trong 2 tuần: Đào tạo bảo mật cho nhà phát triển\n\n")
 
             f.write("TIMELINE KHẮC PHỤC ĐỀ XUẤT:\n")
             f.write("-"*50 + "\n")
