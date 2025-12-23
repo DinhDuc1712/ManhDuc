@@ -34,7 +34,8 @@ class DVVAAuthBypassExploiter:
         """Print banner"""
         print(f"{Fore.CYAN}{'='*80}")
         print(f"{Fore.YELLOW}DVWA IDOR EXPLOITER")
-        print(f"{Fore.CYAN}Cấp độ Low và Medium")
+        print(f"{fore.RED}Author: Đinh Mạnh Đức")
+        print(f"{Fore.CYAN}Cấp độ LOW và MEDIUM")
         print(f"{Fore.CYAN}{'='*80}")
     
     def login(self, username, password):
