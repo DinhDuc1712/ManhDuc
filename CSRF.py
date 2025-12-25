@@ -3,6 +3,7 @@ import argparse
 import sys
 import re
 from bs4 import BeautifulSoup
+from colorama import Fore
 
 class DVWACSRFExploiterLow:
     def __init__(self, base_url):
@@ -299,7 +300,7 @@ class DVWACSRFExploiterLow:
         Tạo file HTML Proof of Concept
         """
         print("\n" + "="*60)
-        print("[*] TẠO PROOF OF CONCEPT (PoC)")
+        print(f"{Fore.CYAN}[*] TẠO PROOF OF CONCEPT (PoC)")
         print("="*60)
         
         poc_html = f"""<!DOCTYPE html>
@@ -393,7 +394,7 @@ class DVWACSRFExploiterLow:
             <li><strong>Điều kiện:</strong> Nạn nhân phải đã đăng nhập DVWA</li>
         </ul>
         
-        <h2>⚡ Demo tấn công</h2>
+        <h2>Demo tấn công</h2>
         <p>Nhấn nút bên dưới để thực hiện tấn công CSRF:</p>
         
         <div class="code" id="attackCode">
@@ -500,7 +501,7 @@ class DVWACSRFExploiterLow:
         """
         self.print_banner()
         
-        print("[*] BẮT ĐẦU KHAI THÁC CSRF - MỨC ĐỘ LOW")
+        print(f"{Fore.GREEN}[*] BẮT ĐẦU KHAI THÁC CSRF - MỨC ĐỘ LOW")
         print("="*60)
         
         # 1. Tìm form CSRF
@@ -531,7 +532,7 @@ class DVWACSRFExploiterLow:
         
         # Tổng kết
         print("\n" + "="*60)
-        print("[*] KẾT QUẢ KHAI THÁC")
+        print(f"{Fore.CYAN}[*] KẾT QUẢ KHAI THÁC")
         print("="*60)
         
         if success:
@@ -544,16 +545,16 @@ class DVWACSRFExploiterLow:
         print(f"[+] Attack URL: {attack_url_final}")
         
         if poc_file:
-            print(f"[+] PoC File: {poc_file}")
+            print(f"{Fore.CYAN}[+] PoC File: {poc_file}")
         
-        print("\n[+] HƯỚNG DẪN SỬ DỤNG:")
+        print(f"\n{Fore.BLUE}[+] HƯỚNG DẪN SỬ DỤNG:")
         print("    1. Mở file PoC trong trình duyệt")
         print("    2. Đảm bảo đã đăng nhập DVWA trong cùng trình duyệt")
         print("    3. Nhấn nút 'Thực hiện tấn công CSRF'")
         print("    4. Kiểm tra kết quả bằng cách đăng nhập với mật khẩu mới")
         
         print("\n" + "="*60)
-        print("[*] HOÀN TẤT KHAI THÁC")
+        print(f"{Fore.BLUE}[*] HOÀN TẤT KHAI THÁC")
         print("="*60)
 
 def main():
