@@ -436,7 +436,6 @@ class DVWACSRFExploiterLow:
         <div class="warning">
             <strong>Tài liệu tham khảo:</strong><br>
             • OWASP CSRF Cheat Sheet<br>
-            • Hình 4.23 trong tài liệu đề tài: "Kết quả nhận được"<br>
             • DVWA CSRF Vulnerability
         </div>
     </div>
